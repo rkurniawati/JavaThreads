@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "spmd"
+		},
+		{
+			"path": "forkjoin"
+		}
+	],
+	"settings": {}
+}
