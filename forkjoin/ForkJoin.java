@@ -6,12 +6,12 @@ import java.util.stream.IntStream;
 public class ForkJoin {
     private static void executeCode(Runnable r, int numThreads) {
         ThreadPoolExecutor tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
-
+        tpe.prestartAllCoreThreads();
         IntStream.range(0, numThreads).forEach(( i ) -> tpe.execute(r));
         try {
             tpe.awaitTermination(1000, TimeUnit.MILLISECONDS);            
         } catch (Exception e) {}
-        //tpe.shutdown();
+        tpe.shutdown();
     }
 
     public static void main(String[] args) {
