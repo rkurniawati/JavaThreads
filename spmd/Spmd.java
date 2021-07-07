@@ -5,19 +5,8 @@ import java.util.stream.IntStream;
 
 class Spmd {
 
-    static String threadName;
-    static int numThreads;
-
-    private static void executeCode(Runnable r, int numThreads) {
-        ThreadPoolExecutor tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
-        tpe.prestartAllCoreThreads();
-        IntStream.range(0, numThreads).forEach(( i ) -> tpe.execute(r));
-        try {
-            tpe.awaitTermination(1000, TimeUnit.MILLISECONDS);            
-        } catch (Exception e) {}
-        tpe.shutdown();
-    }
-
+    private static String threadName;
+    private static int numThreads;
     public static void main(String[] args) {
 
         // check and parse argument
@@ -41,6 +30,23 @@ class Spmd {
                 String message = "Hello from " +  threadName + " from a pool of " + numThreads;
                 System.out.println(message);
            }, numThreads);
+
+        shutdown();
         System.out.println("Done.");
+    }
+
+    private static ThreadPoolExecutor tpe;
+
+    private static void executeCode(Runnable r, int numThreads) {
+        tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
+        tpe.prestartAllCoreThreads();
+        IntStream.range(0, numThreads).forEach(( i ) -> tpe.execute(r));
+    }
+
+    private static void shutdown() {
+        try {
+            tpe.awaitTermination(100, TimeUnit.MILLISECONDS);            
+        } catch (Exception e) {}
+        tpe.shutdown();
     }
 }

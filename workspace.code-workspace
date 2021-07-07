@@ -7,11 +7,18 @@
 			"path": "barrier"
 		},
 		{
+			"path": "masterWorker"
+		},
+		{
 			"path": "spmd"
 		},
 		{
 			"path": "forkjoin"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"java.project.sourcePaths": [
+			""
+		]
+	}
 }
