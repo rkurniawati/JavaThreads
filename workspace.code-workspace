@@ -4,6 +4,9 @@
 			"path": "."
 		},
 		{
+			"path": "barrier"
+		},
+		{
 			"path": "spmd"
 		},
 		{
