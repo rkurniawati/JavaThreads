@@ -1,39 +1,44 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 public class ForkJoin {
 
+    static class Part1 implements Callable<Void> {
+        @Override
+        public Void call() throws Exception {
+            System.out.println(Thread.currentThread().getName()  + ": Part I");
+            return null;
+        }
+    }
+
+    static class Part2 implements Callable<Void> {
+        @Override
+        public Void call() throws Exception {
+            System.out.println(Thread.currentThread().getName()  + ": Part II");
+            return null;
+        }
+    }
+
+    static class Part3 implements Callable<Void> {
+        @Override
+        public Void call() throws Exception {
+            System.out.println(Thread.currentThread().getName()  + ": Part III");
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
+        ForkJoinPool fjp = new ForkJoinPool(5);
         System.out.println("\nBeginning\n");
-        executeCode(() -> System.out.println("Part I"), 2);
-        shutdown();
-    
+        fjp.invokeAll(Arrays.asList(new Part1(), new Part1()));
+
         System.out.println("\n\nBetween I and II...\n");
-        executeCode(() -> System.out.println("Part II"), 3);
-        shutdown();
-        
+        fjp.invokeAll(Arrays.asList(new Part2(), new Part2(), new Part2()));
+
         System.out.println("\n\nBetween II and III...\n");
-        executeCode(() -> System.out.println("Part III"), 5);
-        shutdown();
-        
+        fjp.invokeAll(Arrays.asList(new Part3(), new Part3(), new Part3(), new Part3(), new Part3()));
+
         System.out.println("\n\nEnd\n\n");
     }
-
-    private static ThreadPoolExecutor tpe;
-
-    private static void executeCode(Runnable r, int numThreads) {
-        tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
-        tpe.prestartAllCoreThreads();
-        IntStream.range(0, numThreads).forEach(( i ) -> tpe.execute(r));
-    }
-
-    private static void shutdown() {
-        try {
-            tpe.awaitTermination(100, TimeUnit.MILLISECONDS);            
-        } catch (Exception e) {}
-        tpe.shutdown();
-    }
-
 }

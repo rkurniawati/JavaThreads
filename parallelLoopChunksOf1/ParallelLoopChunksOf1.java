@@ -10,20 +10,21 @@ import java.util.stream.IntStream;
  *
  *    java -Djava.util.concurrent.ForkJoinPool.common.parallelism=100 ParallelLoopEqualChunks
  */
-public class ParallelLoopEqualChunks {
+public class ParallelLoopChunksOf1 {
     static final int REPS = 16;
 
     static class ChunkExecutor implements Callable<Void> {
-        private int startIndex, endIndex;
+        private int startIndex, endIndex, step;
 
-        public ChunkExecutor(int startIndex, int endIndex) {
+        public ChunkExecutor(int startIndex, int endIndex, int step) {
             this.startIndex = startIndex;
             this.endIndex = endIndex; // not inclusive
+            this.step = step;
         }
 
         @Override
         public Void call() throws Exception {
-            for(int i = startIndex; i < endIndex; i++) {
+            for(int i = startIndex; i < endIndex; i+=step) {
                 System.out.println("Thread " + Thread.currentThread().getName() + " performed iteration " + i);
             }
             return null;
@@ -40,21 +41,12 @@ public class ParallelLoopEqualChunks {
 
         // initialize the thread pool
         ForkJoinPool fjp = new ForkJoinPool();
-        int numThreads = fjp.getParallelism();
-        System.out.println("Number of parallel threads " + numThreads);
+        int size = fjp.getParallelism();
 
         // divide the work
         List<ChunkExecutor> tasks = new ArrayList<>();
-        int startIndex = 0;
-
-        for(int i = 0; i < numThreads; i++) {
-            int leftOver = (numReps % numThreads <= i) ? 0 : 1; // if REPS is not divisible evenly, spread it over threads
-            int chunkSize = numReps / numThreads + leftOver;
-
-            assert(startIndex+leftOver+chunkSize <= numReps);
-
-            tasks.add(new ChunkExecutor(startIndex, startIndex + chunkSize));
-            startIndex += chunkSize;
+        for(int i = 0; i < size; i++) {
+            tasks.add(new ChunkExecutor(i, REPS, size));
         }
 
         fjp.invokeAll(tasks);
