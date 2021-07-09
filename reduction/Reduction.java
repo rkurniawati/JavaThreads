@@ -29,19 +29,26 @@ public class Reduction {
         long seqTime = System.currentTimeMillis() - startTime;
         System.out.println("Seq total " + seqTotal + ", calculated in " + seqTime + " ms.");
 
+        // using common pool
+        startTime = System.currentTimeMillis();
+        int parTotal1 = randomInts.parallelStream().reduce(0, Integer::sum);
+        long parTime1 = System.currentTimeMillis() - startTime;
+
+        System.out.println("Parallel total " + parTotal1 + ", calculated in " + parTime1 + " ms.");
+
         startTime = System.currentTimeMillis();
         ForkJoinPool customThreadPool = new ForkJoinPool(numThreads);
-        int parTotal = 0;
+        int parTotal2 = 0;
         try {
-            parTotal = customThreadPool.submit(
+            parTotal2 = customThreadPool.submit(
                     () -> randomInts.parallelStream().reduce(0, Integer::sum)).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        long parTime = System.currentTimeMillis() - startTime;
+        long parTime2 = System.currentTimeMillis() - startTime;
 
-        System.out.println("Parallel total " + parTotal + ", calculated in " + parTime + " ms.");
+        System.out.println("Parallel total " + parTotal2 + ", calculated in " + parTime2 + " ms.");
     }
 }
