@@ -1,10 +1,8 @@
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Reduction {
     private static final long SIZE = 1_000_000;

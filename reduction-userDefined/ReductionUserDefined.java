@@ -1,3 +1,21 @@
+/* Reduction2.java computes a table of factorial values,
+ *  using Java's BigInteger class to explore
+ *
+ *  Adapted from original Joel Adams' patternlet
+ *
+ *  Usage: 
+ *
+ *  Exercise:
+ *  - Build and run, record sequential time in a spreadsheet
+ *  - Uncomment #pragma omp parallel for directive, rebuild,
+ *     and read the error message carefully.
+ *  - Uncomment the #pragma omp declare directive, rebuild,
+ *     and note the user-defined * reduction for a BigInt.
+ *  - Rerun, using 2, 4, 6, 8, ... threads, recording
+ *     the times in the spreadsheet.
+ *  - Create a chart that plots the times vs the # of threads.
+ *  - Experiment with different n values
+ */
 
 import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
