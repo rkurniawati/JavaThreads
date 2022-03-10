@@ -2,11 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.IntStream;
 
 /**
  * 
- * To specify the number of thread in the ForkJoinPool, specify the java.util.concurrent.ForkJoinPool.common.parallelism system property. For example:
+ * To specify the number of thread in the ForkJoinPool, specify the 
+ * java.util.concurrent.ForkJoinPool.common.parallelism system property. 
+ * 
+ * For example:
  *
  *    java -Djava.util.concurrent.ForkJoinPool.common.parallelism=100 ParallelLoopEqualChunks
  */
@@ -41,6 +43,7 @@ public class ParallelLoopEqualChunks {
         // initialize the thread pool
         ForkJoinPool fjp = new ForkJoinPool();
         int numThreads = fjp.getParallelism();
+        System.out.println("Number of repetitions " + numReps);
         System.out.println("Number of parallel threads " + numThreads);
 
         // divide the work

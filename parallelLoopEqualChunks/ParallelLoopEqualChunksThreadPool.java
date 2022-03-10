@@ -1,14 +1,12 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.stream.IntStream;
 
 /**
  *
- * To specify the number of thread in the ForkJoinPool, specify the java.util.concurrent.ForkJoinPool.common.parallelism system property. For example:
+ * To specify the number of thread in the ForkJoinPool, specify the 
+ * java.util.concurrent.ForkJoinPool.common.parallelism system property. 
+ * 
+ * For example:
  *
  *    java -Djava.util.concurrent.ForkJoinPool.common.parallelism=100 ParallelLoopEqualChunks
  */
@@ -30,6 +28,13 @@ public class ParallelLoopEqualChunksThreadPool {
                 } catch(InterruptedException e) {}
                 System.out.println("Thread " + Thread.currentThread().getName() + " performed iteration " + i);
             }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("ChunkExecutor{");
+            sb.append("startIndex:").append(startIndex).append(",endIndex:").append(endIndex);
+            return sb.append("}").toString();
         }
     }
 
@@ -59,6 +64,7 @@ public class ParallelLoopEqualChunksThreadPool {
         // initialize the thread pool
         ThreadPoolExecutor tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numProcessors);
         tpe.prestartAllCoreThreads();
+        System.out.println("Number of repetitions " + numReps);
         System.out.println("Number of parallel threads " + tpe.getCorePoolSize());
 
         // divide the work
@@ -70,7 +76,9 @@ public class ParallelLoopEqualChunksThreadPool {
 
             assert(startIndex+leftOver+chunkSize <= numReps);
 
-            tpe.execute(new RunnableExecutor(new ChunkExecutor(startIndex, startIndex + chunkSize)));
+            ChunkExecutor ce = new ChunkExecutor(startIndex, startIndex + chunkSize);
+            System.out.println(ce);
+            tpe.execute(new RunnableExecutor(ce));
             startIndex += chunkSize;
         }
 

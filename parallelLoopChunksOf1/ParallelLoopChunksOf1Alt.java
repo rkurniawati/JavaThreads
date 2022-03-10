@@ -9,7 +9,7 @@ import java.util.concurrent.ForkJoinPool;
  *
  *    java -Djava.util.concurrent.ForkJoinPool.common.parallelism=100 ParallelLoopEqualChunks
  */
-public class ParallelLoopChunksOf1 {
+public class ParallelLoopChunksOf1Alt {
     static final int REPS = 16;
 
     static class ChunkExecutor implements Callable<Void> {
