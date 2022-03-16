@@ -21,7 +21,7 @@ public class DynamicSchedulingStream {
         IntStream.range(0, numReps)
                 .parallel()
                 .forEach(i -> {
-                    final int sleepTime = ((i % 3 == 0) ? 1 : 100);
+                    final int sleepTime = ((i % 6 == 0) ? 1000 : 1);
 
                     System.out.println("Thread " + Thread.currentThread().getName() + " starting iteration " + i);
                     sleepALittle(sleepTime);

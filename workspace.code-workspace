@@ -27,6 +27,9 @@
 		{
 			"path": "forkjoin"
 		}
+		{
+			"path": "integration"
+		}
 	],
 	"settings": {
 		"java.project.sourcePaths": [

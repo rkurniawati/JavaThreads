@@ -32,8 +32,7 @@ public class DynamicSchedulingForkJoinPool {
         Random r = new Random();
         List<Callable<Void>> tasks = new ArrayList<>();
         for(int i = 0; i < numReps; i++) {
-            // every third thread have longer sleep
-            final int sleepTime = ((i % 3 == 0) ? 1 : 100);
+            final int sleepTime = ((i % 6 == 0) ? 1000 : 1);
 
             tasks.add(() -> {
                 System.out.println("Thread " + Thread.currentThread().getName() + " about to sleep " + sleepTime + " ms");
