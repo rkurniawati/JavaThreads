@@ -30,7 +30,7 @@ class Spmd2Stream {
                 String threadName = Thread.currentThread().getName();
                 int numThreads = customPool.getParallelism();
                 Thread.yield();
-                String message = "Hello from " +  threadName + " from a pool of " + numThreads;
+                String message = i + ": Hello from " +  threadName + " from a pool of " + numThreads;
                 System.out.println(message);
             })
         ).get();
