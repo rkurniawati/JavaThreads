@@ -4,19 +4,22 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
-public class ReductionRace {
+public class ReductionCriticalSection {
     private static final long SIZE = 1_000_000;
     private static final int MAX = 1_000;
 
     static class Total {
         int total;
-        void add(int i) {
+
+        // critical section
+        synchronized void add(int i) {
             total += i;
         }
         public String toString() {
             return Integer.toString(total);
         }
     }
+
     // the total in sequential and parallel
     private static Total seqTotal = new Total(), parTotal1 = new Total(), parTotal2 = new Total();
 
