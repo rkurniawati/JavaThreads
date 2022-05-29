@@ -18,9 +18,7 @@ public class ParallelStream {
         }
 
         IntStream.range(0, numReps).parallel().forEach(
-            (i) -> {
-                System.out.println("Thread "+Thread.currentThread().getName()+ " performed iteration "+i);
-            }
+            i -> System.out.println("Thread "+Thread.currentThread().getName()+ " performed iteration "+i)
         );
 
         System.out.println("Done.");

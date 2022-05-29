@@ -1,52 +1,38 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 
-class Spmd {
+public class Spmd {
 
     private static String threadName;
     private static int numThreads;
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
 
         // check and parse argument
         if (args.length == 0) {
-            System.out.println("Usage " + Spmd.class.getName() + " numThreads.");
+            System.out.println("Usage SpmdStream numThreads.");
             System.out.println("Number of threads should be >= 1");
             return;
         }
 
         numThreads = Integer.parseInt(args[0]);
         if (numThreads < 1) {
-            System.out.println("Usage " + Spmd.class.getName() + " numThreads.");
+            System.out.println("Usage SpmdStream numThreads.");
             System.out.println("Number of threads should be >= 1");
             return;
         }
 
-        // launch the threads
-        executeCode(() -> {
+        // launch the parallel stream using the custom pool
+        ForkJoinPool customPool = new ForkJoinPool(numThreads);
+        customPool.submit(() -> 
+            IntStream.range(0, numThreads).parallel().forEach(i -> {
                 threadName = Thread.currentThread().getName();
                 Thread.yield();
                 String message = "Hello from " +  threadName + " from a pool of " + numThreads;
                 System.out.println(message);
-           }, numThreads);
+            })
+        ).get();
 
-        shutdown();
         System.out.println("Done.");
-    }
-
-    private static ThreadPoolExecutor tpe;
-
-    private static void executeCode(Runnable r, int numThreads) {
-        tpe = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
-        tpe.prestartAllCoreThreads();
-        IntStream.range(0, numThreads).forEach(( i ) -> tpe.execute(r));
-    }
-
-    private static void shutdown() {
-        try {
-            tpe.awaitTermination(100, TimeUnit.MILLISECONDS);            
-        } catch (Exception e) {}
-        tpe.shutdown();
     }
 }

@@ -21,28 +21,29 @@ public class ReductionCriticalSection {
     }
 
     // the total in sequential and parallel
-    private static Total seqTotal = new Total(), parTotal1 = new Total(), parTotal2 = new Total();
+    private static final Total seqTotal = new Total(), parTotal1 = new Total(), parTotal2 = new Total();
 
     static void sequentialSum(List<Integer> randomInts) {
-        randomInts.stream().forEach(i->seqTotal.add(i));
+        randomInts.forEach(
+            i -> seqTotal.add(i));
     }
 
     // parallel sum using a common pool
     static void parallelSum1(List<Integer> randomInts) {
         randomInts.parallelStream().forEach(
-                i-> parTotal1.add(i)
+            i -> parTotal1.add(i)
         );
     }
 
     // parallel sum using a custom pool
     static void parallelSum2(List<Integer> randomInts, ForkJoinPool customThreadPool) {
         try {
-            customThreadPool.submit(
-                    () -> randomInts.parallelStream().forEach(i->parTotal2.add(i))
-            ).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            customThreadPool.submit(() ->
+                randomInts.parallelStream().forEach(
+                    i -> parTotal2.add(i)
+                )
+            ).get(); // get() to ensure that the task completed before we continue
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -50,7 +51,7 @@ public class ReductionCriticalSection {
     public static void main(String[] args) {
         // generate a stream of random integer in [0..MAX)
         List<Integer> randomInts = (new Random(123)).ints(0, MAX).limit(SIZE)
-                .mapToObj(x -> x).collect(Collectors.toList());
+                .boxed().collect(Collectors.toList());
 
         // sequential 
         long startTime = System.currentTimeMillis();

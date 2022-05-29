@@ -1,7 +1,7 @@
 import java.util.stream.IntStream;
 import java.util.concurrent.ForkJoinPool;
 
-public class ParallelLoopEqualChunksParallelStreamCustomPool {
+public class ParallelLoopEqualChunksCustomPool {
     static final int REPS = 16;
     static int numReps = REPS;
 
@@ -18,12 +18,9 @@ public class ParallelLoopEqualChunksParallelStreamCustomPool {
 
         ForkJoinPool customPool = new ForkJoinPool(numThreads);
         customPool.submit(() -> 
-            IntStream.range(0, numReps)
-                    .parallel()
-                    .forEach(i -> {
-                        sleepALittle(5);
-                        System.out.println("Thread " + Thread.currentThread().getName() + " completed iteration " + i);
-                    })
+            IntStream.range(0, numReps).parallel().forEach(
+                i -> System.out.println("Thread " + Thread.currentThread().getName() + " completed iteration " + i)
+            )
         ).get();
         System.out.println("Done.");
 

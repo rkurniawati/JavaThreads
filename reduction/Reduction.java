@@ -20,12 +20,10 @@ public class Reduction {
     // parallel sum using a custom pool
     static int parallelSum2(List<Integer> randomInts, ForkJoinPool customThreadPool) {
         try {
-            return customThreadPool.submit(
-                        () -> randomInts.parallelStream().reduce(0, Integer::sum)
-                    ).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            return customThreadPool.submit(() ->
+                randomInts.parallelStream().reduce(0, Integer::sum)
+            ).get(); // make sure that the task completes before we continue
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return 0;
@@ -34,7 +32,7 @@ public class Reduction {
     public static void main(String[] args) {
         // generate a stream of random integer in [0..MAX)
         List<Integer> randomInts = (new Random()).ints(0, MAX).limit(SIZE)
-                .mapToObj(x -> x).collect(Collectors.toList());
+                .boxed().collect(Collectors.toList());
 
         // sequential 
         long startTime = System.currentTimeMillis();

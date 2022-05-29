@@ -31,14 +31,11 @@ public class ReductionUserDefined {
         ForkJoinPool fjp = new ForkJoinPool(numThreads);
         try {
             return fjp.submit(() ->
-             IntStream.range(1, n).parallel().mapToObj(i -> BigInteger.valueOf((long)i))
-                    .reduce( BigInteger.valueOf(1l), (accumulator, current)-> {
-                        //System.out.println("Thread: " + Thread.currentThread().getName());
-                        return accumulator.multiply(current);
-                    })).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+             IntStream.range(1, n).parallel().mapToObj(i -> BigInteger.valueOf(i)).reduce(
+                 BigInteger.valueOf(1L),
+                 (accumulator, current)-> accumulator.multiply(current)
+             )).get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
@@ -63,6 +60,7 @@ public class ReductionUserDefined {
         BigInteger result = factorial(numThreads, n);
         long duration = System.currentTimeMillis() - startTime;
 
+        assert result != null;
         System.out.println("Result = " + result.toString(10));
         System.out.println("Time = " + duration + " ms");
     }
